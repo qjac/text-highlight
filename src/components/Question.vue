@@ -1,10 +1,14 @@
-<template
-    ><div>
+<template>
+    <div>
         <div class="question" id="question" @mouseup="getSelectedText">
             <p v-html="savedText"></p>
         </div>
+        <button @click="resetSelection">Reset selection</button>
+        <button @submit="submitSelection">Submit selection</button>
+
         <h2>Response</h2>
         <div id="response" class="response" v-html="response"></div>
+        <div>this.response = {{ response }}</div>
     </div>
 </template>
 
@@ -79,7 +83,7 @@ export default {
             const mySelection = window.getSelection(e);
             // console.log(mySelection);
 
-            // if the slection is not empty, grab the offsets
+            // if the selection is not empty (aka does not have same start and end point), grab the offsets
             if (!mySelection.isCollapsed) {
                 const range = mySelection.getRangeAt(0);
 
@@ -94,11 +98,23 @@ export default {
                         ' | end offset: ' +
                         this.endOffset
                 );
+
+                // display selection to selector? If wrapping selection in spans, collect offsets before that happens to keep consistent?
+
+                // this.response = mySelection; // updates this.response value, but doeasn't update view if a new selection is made. Why do they behave differently?
+                this.response = range; // updates both this.response value and the view.
+
+                console.log('get: ' + this.response);
+                return this.response; // do we need to return? why/why not?
             }
         },
 
         resetSelection() {
             // button event to clear selection
+            this.response = '';
+
+            // if we are displaying the response, clear that out too
+            console.log('reset: ' + this.response);
         },
 
         submitSelection() {
@@ -106,6 +122,8 @@ export default {
             // for now display response
             // push to results array
             // Question? what needs to be in array? Do we need to know who the response is from?
+
+            console.log('submit: ' + this.response);
         },
     },
 };
