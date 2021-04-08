@@ -7,7 +7,7 @@
         <button @click="submitSelection">Submit selection</button>
 
         <h2>Response</h2>
-        <div id="response" class="response" v-html="responseText"></div>
+        <div id="response" class="response" v-html="mytext"></div>
         <div>this.responseText = {{ responseText }}</div>
     </div>
 </template>
@@ -33,21 +33,12 @@ export default {
     computed: {
         mytext: function() {
             var outputString = '';
-            // var student1 = {
-            //     startOffset: 10,
-            //     endOffset: 20,
-            // };
-            // var student2 = {
-            //     startOffset: 12,
-            //     endOffset: 23,
-            // };
-            // var student3 = {
-            //     startOffset: 2,
-            //     endOffset: 15,
-            // };
-            // var responses = [student1, student2, student3];
-            // console.log(responses);
-            // var histogram = [];
+
+            console.log('how many responses? ' + this.responses.length);
+
+            var responses = this.responses;
+            console.log(responses);
+            var histogram = [];
             // for (var i = 0; i < responses.length; i++) {
             //     var currentStudent = responses[i];
             //     for (
@@ -62,7 +53,7 @@ export default {
             //         }
             //     }
             // }
-            // console.log(histogram);
+            console.log('histogram: ' + histogram);
             // for (i = 0; i < this.savedText.length; i++) {
             //     if (i >= this.startOffset && i < this.endOffset) {
             //         var colorString =
