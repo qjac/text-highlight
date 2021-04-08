@@ -4,7 +4,7 @@
             <p v-html="savedText"></p>
         </div>
         <button @click="resetSelection">Reset selection</button>
-        <button @submit="submitSelection">Submit selection</button>
+        <button @click="submitSelection">Submit selection</button>
 
         <h2>Response</h2>
         <div id="response" class="response" v-html="response"></div>
@@ -23,42 +23,46 @@ export default {
                 'Schaefer’s job, with a Dublin-based solar panel startup, was to write an e-book',
             startOffset: 0,
             endOffset: 0,
+            responsesArray: {
+                student1: { startOffset: 10, endOffset: 20 },
+                student2: { startOffset: 12, endOffset: 23 },
+                student3: { startOffset: 2, endOffset: 15 },
+            },
         };
     },
     computed: {
         mytext: function() {
             var outputString = '';
-
-            var student1 = {
-                startOffset: 10,
-                endOffset: 20,
-            };
-            var student2 = {
-                startOffset: 12,
-                endOffset: 23,
-            };
-            var student3 = {
-                startOffset: 2,
-                endOffset: 15,
-            };
-            var responses = [student1, student2, student3];
-            var histogram = [];
-            for (var i = 0; i < responses.length; i++) {
-                var currentStudent = responses[i];
-                for (
-                    var k = currentStudent.startOffset;
-                    k < currentStudent.endOffset;
-                    k++
-                ) {
-                    if (histogram[k]) {
-                        histogram[k]++;
-                    } else {
-                        histogram[k] = 1;
-                    }
-                }
-            }
-            console.log(histogram);
-
+            // var student1 = {
+            //     startOffset: 10,
+            //     endOffset: 20,
+            // };
+            // var student2 = {
+            //     startOffset: 12,
+            //     endOffset: 23,
+            // };
+            // var student3 = {
+            //     startOffset: 2,
+            //     endOffset: 15,
+            // };
+            // var responses = [student1, student2, student3];
+            // console.log(responses);
+            // var histogram = [];
+            // for (var i = 0; i < responses.length; i++) {
+            //     var currentStudent = responses[i];
+            //     for (
+            //         var k = currentStudent.startOffset;
+            //         k < currentStudent.endOffset;
+            //         k++
+            //     ) {
+            //         if (histogram[k]) {
+            //             histogram[k]++;
+            //         } else {
+            //             histogram[k] = 1;
+            //         }
+            //     }
+            // }
+            // console.log(histogram);
             // for (i = 0; i < this.savedText.length; i++) {
             //     if (i >= this.startOffset && i < this.endOffset) {
             //         var colorString =
@@ -74,7 +78,6 @@ export default {
             //         outputString = outputString + this.savedText[i];
             //     }
             // }
-
             return outputString;
         },
     },
@@ -86,7 +89,6 @@ export default {
             // if the selection is not empty (aka does not have same start and end point), grab the offsets
             if (!mySelection.isCollapsed) {
                 const range = mySelection.getRangeAt(0);
-
                 // console.log(range);
 
                 this.startOffset = range.startOffset;
@@ -111,17 +113,35 @@ export default {
 
         resetSelection() {
             // button event to clear selection
-            this.response = '';
+            console.log('before reset: ' + this.response);
+            console.log(window.getSelection());
 
-            // if we are displaying the response, clear that out too
+            // empty stored values
+            this.response = '';
+            this.startOffset = 0;
+            this.endOffset = 0;
+
+            // remove onscreen selection
+            window.getSelection().removeAllRanges();
+
             console.log('reset: ' + this.response);
+            console.log(window.getSelection());
         },
 
         submitSelection() {
-            // button event to send repsonse in
-            // for now display response
+            // button event to send response to server
+
+            console.log('before submit: ' + this.response);
+            console.log();
+
+            // for now display response on submit
             // push to results array
             // Question? what needs to be in array? Do we need to know who the response is from?
+            // console.log(this.mytext);
+
+            // after response sent, resetSelection();
+            // console.log('before reset: ' + this.response);
+            // console.log(window.getSelection());
 
             console.log('submit: ' + this.response);
         },
