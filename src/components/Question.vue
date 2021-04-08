@@ -94,18 +94,18 @@ export default {
                 this.startOffset = range.startOffset;
                 this.endOffset = range.endOffset;
 
-                console.log(
-                    'start offset: ' +
-                        this.startOffset +
-                        ' | end offset: ' +
-                        this.endOffset
-                );
+                // console.log(
+                //     'start offset: ' +
+                //         this.startOffset +
+                //         ' | end offset: ' +
+                //         this.endOffset
+                // );
 
                 // display selection to selector? If wrapping selection in spans, collect offsets before that happens to keep consistent?
 
                 this.responseText = range; // updates both this.response value and the view.
 
-                console.log('get: ' + this.responseText);
+                // console.log('get: ' + this.responseText);
                 return this.responseText; // do we need to return? why/why not?
             } else {
                 //if there isn't a selection, reset what's stored
@@ -115,8 +115,8 @@ export default {
 
         resetSelection() {
             // button event to clear selection
-            console.log('before reset: ' + this.responseText);
-            console.log(window.getSelection());
+            // console.log('before reset: ' + this.responseText);
+            // console.log(window.getSelection());
 
             // empty stored values
             this.responseText = '';
@@ -126,8 +126,8 @@ export default {
             // remove onscreen selection
             window.getSelection().removeAllRanges();
 
-            console.log('reset: ' + this.responseText);
-            console.log(window.getSelection());
+            // console.log('reset: ' + this.responseText);
+            // console.log(window.getSelection());
 
             return;
         },
@@ -135,18 +135,18 @@ export default {
         submitSelection() {
             // button event to send response to server
 
-            console.log('before submit: ' + this.responseText);
-            console.table(this.responses);
+            // console.log('before submit: ' + this.responseText);
+            // console.table(this.responses);
 
-            console.log(
-                'start offset: ' +
-                    this.startOffset +
-                    ' | end offset: ' +
-                    this.endOffset
-            );
+            // console.log(
+            //     'start offset: ' +
+            //         this.startOffset +
+            //         ' | end offset: ' +
+            //         this.endOffset
+            // );
 
             let key = 'student' + (this.responses.length + 1);
-            console.log(key);
+            // console.log(key);
             // array setup: { student1: { startOffset: 10, endOffset: 20 } },
             let response = {
                 [key]: {
@@ -154,11 +154,11 @@ export default {
                     endOffset: this.endOffset,
                 },
             };
-            console.log(response);
+            // console.log(response);
 
             this.responses.push(response);
 
-            console.table(this.responses);
+            // console.table(this.responses);
 
             // after response sent, resetSelection(); or load new view
             this.resetSelection();
