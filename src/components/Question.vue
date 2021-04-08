@@ -7,8 +7,8 @@
         <button @click="submitSelection">Submit selection</button>
 
         <h2>Response</h2>
-        <div id="response" class="response" v-html="response"></div>
-        <div>this.response = {{ response }}</div>
+        <div id="response" class="response" v-html="responseText"></div>
+        <div>this.responseText = {{ responseText }}</div>
     </div>
 </template>
 
@@ -18,16 +18,16 @@ export default {
     props: {},
     data() {
         return {
-            response: '',
+            responseText: '',
             savedText:
                 'Schaefer’s job, with a Dublin-based solar panel startup, was to write an e-book',
             startOffset: 0,
             endOffset: 0,
-            responsesArray: {
-                student1: { startOffset: 10, endOffset: 20 },
-                student2: { startOffset: 12, endOffset: 23 },
-                student3: { startOffset: 2, endOffset: 15 },
-            },
+            responses: [
+                { student1: { startOffset: 10, endOffset: 20 } },
+                { student2: { startOffset: 12, endOffset: 23 } },
+                { student3: { startOffset: 2, endOffset: 15 } },
+            ],
         };
     },
     computed: {
@@ -103,11 +103,10 @@ export default {
 
                 // display selection to selector? If wrapping selection in spans, collect offsets before that happens to keep consistent?
 
-                // this.response = mySelection; // updates this.response value, but doeasn't update view if a new selection is made. Why do they behave differently?
-                this.response = range; // updates both this.response value and the view.
+                this.responseText = range; // updates both this.response value and the view.
 
-                console.log('get: ' + this.response);
-                return this.response; // do we need to return? why/why not?
+                console.log('get: ' + this.responseText);
+                return this.responseText; // do we need to return? why/why not?
             } else {
                 //if there isn't a selection, reset what's stored
                 this.resetSelection();
@@ -116,37 +115,66 @@ export default {
 
         resetSelection() {
             // button event to clear selection
-            console.log('before reset: ' + this.response);
+            console.log('before reset: ' + this.responseText);
             console.log(window.getSelection());
 
             // empty stored values
-            this.response = '';
+            this.responseText = '';
             this.startOffset = 0;
             this.endOffset = 0;
 
             // remove onscreen selection
             window.getSelection().removeAllRanges();
 
-            console.log('reset: ' + this.response);
+            console.log('reset: ' + this.responseText);
             console.log(window.getSelection());
+
+            return;
         },
 
         submitSelection() {
             // button event to send response to server
 
-            console.log('before submit: ' + this.response);
-            console.log();
+            console.log('before submit: ' + this.responseText);
+            console.table(this.responses);
 
             // for now display response on submit
             // push to results array
             // Question? what needs to be in array? Do we need to know who the response is from?
             // console.log(this.mytext);
 
-            // after response sent, resetSelection();
-            // console.log('before reset: ' + this.response);
-            // console.log(window.getSelection());
+            console.log(
+                'start offset: ' +
+                    this.startOffset +
+                    ' | end offset: ' +
+                    this.endOffset
+            );
 
-            console.log('submit: ' + this.response);
+            // let key = 'student' + (this.responses.length + 1);
+            // console.log(key);
+            // how do I know if the data is set up in the correct way?
+            // Vue stores objects and arrays as references. What does that mean practically? Confusing console output...
+            // array setup: { student1: { startOffset: 10, endOffset: 20 } },
+            let response = {
+                key: {
+                    startOffset: this.startOffset,
+                    endOffset: this.endOffset,
+                },
+            };
+            console.log(response);
+
+            this.responses.push(response);
+
+            console.table(this.responses);
+
+            // after response sent, resetSelection();
+            console.log('before reset: ' + this.responseText);
+            console.log(window.getSelection());
+            this.resetSelection();
+            console.log('submit: ' + this.responseText);
+            console.log(window.getSelection());
+
+            return;
         },
     },
 };
