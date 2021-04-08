@@ -82,8 +82,8 @@ export default {
         },
     },
     methods: {
-        getSelectedText(e) {
-            const mySelection = window.getSelection(e);
+        getSelectedText() {
+            const mySelection = window.getSelection();
             // console.log(mySelection);
 
             // if the selection is not empty (aka does not have same start and end point), grab the offsets
@@ -108,6 +108,9 @@ export default {
 
                 console.log('get: ' + this.response);
                 return this.response; // do we need to return? why/why not?
+            } else {
+                //if there isn't a selection, reset what's stored
+                this.resetSelection();
             }
         },
 
