@@ -153,7 +153,7 @@ export default {
             // let key = 'student' + (this.responses.length + 1);
             // console.log(key);
             // how do I know if the data is set up in the correct way?
-            // Vue stores objects and arrays as references. What does that mean practically? Confusing console output...
+            // Vue stores objects and arrays as references. What does that mean practically? Confusing console output... vue devtools show correct setup, but my key trick above is not working
             // array setup: { student1: { startOffset: 10, endOffset: 20 } },
             let response = {
                 key: {
