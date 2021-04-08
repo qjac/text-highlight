@@ -138,11 +138,6 @@ export default {
             console.log('before submit: ' + this.responseText);
             console.table(this.responses);
 
-            // for now display response on submit
-            // push to results array
-            // Question? what needs to be in array? Do we need to know who the response is from?
-            // console.log(this.mytext);
-
             console.log(
                 'start offset: ' +
                     this.startOffset +
@@ -150,13 +145,11 @@ export default {
                     this.endOffset
             );
 
-            // let key = 'student' + (this.responses.length + 1);
-            // console.log(key);
-            // how do I know if the data is set up in the correct way?
-            // Vue stores objects and arrays as references. What does that mean practically? Confusing console output... vue devtools show correct setup, but my key trick above is not working
+            let key = 'student' + (this.responses.length + 1);
+            console.log(key);
             // array setup: { student1: { startOffset: 10, endOffset: 20 } },
             let response = {
-                key: {
+                [key]: {
                     startOffset: this.startOffset,
                     endOffset: this.endOffset,
                 },
@@ -167,12 +160,8 @@ export default {
 
             console.table(this.responses);
 
-            // after response sent, resetSelection();
-            console.log('before reset: ' + this.responseText);
-            console.log(window.getSelection());
+            // after response sent, resetSelection(); or load new view
             this.resetSelection();
-            console.log('submit: ' + this.responseText);
-            console.log(window.getSelection());
 
             return;
         },
