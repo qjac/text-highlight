@@ -8,7 +8,7 @@
 
         <h2>Response</h2>
         <div id="response" class="response" v-html="mytext"></div>
-        <div>this.responseText = {{ responseText }}</div>
+        <div v-html="responseText"></div>
     </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
         return {
             responseText: '',
             savedText:
-                'Schaefer’s job, with a Dublin-based solar panel startup, was to write an e-book',
+                'Schaefer’s job, <i>with</i> a Dublin-based solar panel startup, was to write an fe-book <br/> heeeey <br /> hey2',
             startOffset: 0,
             endOffset: 0,
             responses: [
@@ -36,9 +36,9 @@ export default {
 
             console.log('how many responses? ' + this.responses.length);
 
-            var responses = this.responses;
-            console.log(responses);
-            var histogram = [];
+            // var responses = this.responses;
+            // console.log(responses);
+            // var histogram = [];
             // for (var i = 0; i < responses.length; i++) {
             //     var currentStudent = responses[i];
             //     for (
@@ -53,7 +53,7 @@ export default {
             //         }
             //     }
             // }
-            console.log('histogram: ' + histogram);
+            // console.log('histogram: ' + histogram);
             // for (i = 0; i < this.savedText.length; i++) {
             //     if (i >= this.startOffset && i < this.endOffset) {
             //         var colorString =
@@ -79,11 +79,32 @@ export default {
 
             // if the selection is not empty (aka does not have same start and end point), grab the offsets
             if (!mySelection.isCollapsed) {
-                const range = mySelection.getRangeAt(0);
-                // console.log(range);
+                var range = window.getSelection().getRangeAt(0);
 
-                this.startOffset = range.startOffset;
-                this.endOffset = range.endOffset;
+                // plain text of selected range (if you want it w/o html)
+                var text = window.getSelection();
+                console.log(text);
+                // document fragment with html for selection
+                var fragment = range.cloneContents();
+                console.log(fragment);
+                // make new element, insert document fragment, then get innerHTML!
+                var div = document.createElement('div');
+                div.appendChild( fragment.cloneNode(true) );
+
+                // your document fragment to a string (w/ html)! (yay!)
+                var html = div.innerHTML;
+                console.log(html);
+
+                var div2 = document.createElement('div');
+                div2.innerHTML = this.savedText;
+                console.log(div2.innerHTML);
+                console.log(div2.innerHTML.indexOf(html));
+                console.log(html.length);
+                // ranges.forEach(element => {
+                //     console.log(element);
+                // });
+                this.startOffset = div2.innerHTML.indexOf(html);
+                this.endOffset = this.startOffset + html.length;
 
                 // console.log(
                 //     'start offset: ' +
@@ -93,11 +114,46 @@ export default {
                 // );
 
                 // display selection to selector? If wrapping selection in spans, collect offsets before that happens to keep consistent?
+                var outputString = "";
+                var insideAnElement = false;
+                for (var i = 0; i < div2.innerHTML.length; i++) {
+                    if (i >= this.startOffset && i < this.endOffset) {
+                    if(div2.innerHTML[i] == "<") {
+                        insideAnElement = true;
+                    }
+                    
+                    if(insideAnElement) {
+                        outputString = outputString + div2.innerHTML[i];
+                    }
+                    
+                    if(div2.innerHTML[i] == ">") {
+                        insideAnElement = false;
+                        continue;
+                    }
 
-                this.responseText = range; // updates both this.response value and the view.
+                    if(insideAnElement) {
+                        continue;
+                    }
+
+                    var colorString =
+                        'rgba(100,100,255, ' + (1 * 20) / 10 + ')';
+                    outputString =
+                        outputString +
+                        "<span style='color: " +
+                        colorString +
+                        "'>" +
+                        div2.innerHTML[i] +
+                        '</span>';
+                } else {
+                    outputString = outputString + div2.innerHTML[i];
+                }
+            }
+            this.responseText = outputString;
+
+                // this.responseText = range; // updates both this.response value and the view.
 
                 // console.log('get: ' + this.responseText);
-                return this.responseText; // do we need to return? why/why not?
+                // return this.responseText; // do we need to return? why/why not?
             } else {
                 //if there isn't a selection, reset what's stored
                 this.resetSelection();
