@@ -6,9 +6,11 @@
         <button @click="resetSelection">Reset selection</button>
         <button @click="submitSelection">Submit selection</button>
 
+        <h2>Responses</h2>
+        <div v-html="combineResponsesHTML"></div>
+
         <h2>Response</h2>
         <div id="response" class="response" v-html="responseText"></div>
-        <!-- <div v-html="responseText"></div> -->
     </div>
 </template>
 
@@ -19,60 +21,107 @@ export default {
     data() {
         return {
             responseText: '',
-            savedText:
-                'Schaefer’s job, <i>with</i> a Dublin-based solar panel startup, was to write an fe-book <br/> heeeey <br /> hey2',
+            // savedText:
+            //     'Schaefer’s job, <i>with</i> a Dublin-based solar panel startup, was to write an fe-book <br/> heeeey <br /> hey2',
+            savedText: 'Schaefer’s job,',
+            responseId: '',
             startOffset: 0,
             endOffset: 0,
             responses: [
-                { student1: { startOffset: 10, endOffset: 20 } },
-                { student2: { startOffset: 12, endOffset: 23 } },
-                { student3: { startOffset: 2, endOffset: 15 } },
+                { responseId: 'student1', startOffset: 0, endOffset: 8 },
+                { responseId: 'student2', startOffset: 12, endOffset: 23 },
+                { responseId: 'student3', startOffset: 2, endOffset: 15 },
             ],
+            combineResponsesHTML: '',
         };
     },
-    computed: {
-        // mytext: function() {
-            // var outputString = '';
-
-            // console.log('how many responses? ' + this.responses.length);
-
-            // // var responses = this.responses;
-            // // console.log(responses);
-            // // var histogram = [];
-            // // for (var i = 0; i < responses.length; i++) {
-            // //     var currentStudent = responses[i];
-            // //     for (
-            // //         var k = currentStudent.startOffset;
-            // //         k < currentStudent.endOffset;
-            // //         k++
-            // //     ) {
-            // //         if (histogram[k]) {
-            // //             histogram[k]++;
-            // //         } else {
-            // //             histogram[k] = 1;
-            // //         }
-            // //     }
-            // // }
-            // // console.log('histogram: ' + histogram);
-            // // for (i = 0; i < this.savedText.length; i++) {
-            // //     if (i >= this.startOffset && i < this.endOffset) {
-            // //         var colorString =
-            // //             'rgba(100,100,100, ' + (1 * histogram[i]) / 10 + ')';
-            // //         outputString =
-            // //             outputString +
-            // //             "<span style='color: " +
-            // //             colorString +
-            // //             "'>" +
-            // //             this.savedText[i] +
-            // //             '</span>';
-            // //     } else {
-            // //         outputString = outputString + this.savedText[i];
-            // //     }
-            // // }
-            // return outputString;
-        // },
-    },
+    computed: {},
     methods: {
+        displayResults() {
+            // for other characters, ++ for each response that has it in range (data attr? or in css property) and wrap it in a class for styling
+
+            // get full html
+            let savedText = this.savedText;
+            // console.log(savedText);
+
+            let outputString = '';
+            let insideAnElement = false;
+            let responsesArray = this.responses;
+            // step thru character by character
+            for (var i = 0; i < savedText.length; i++) {
+                // console.log(i + ': ' + savedText[i]);
+
+                // pass html tags thru
+                if (savedText[i] == '<') {
+                    insideAnElement = true;
+                }
+
+                if (insideAnElement) {
+                    outputString = outputString + savedText[i];
+                }
+
+                if (savedText[i] == '>') {
+                    insideAnElement = false;
+                    continue;
+                }
+
+                if (insideAnElement) {
+                    continue;
+                }
+
+                let counter = 0;
+
+                // loop thru each response and grab offsets
+                responsesArray.forEach(function(response, responseIndex) {
+                    // console.log(savedText[i]);
+                    console.table(i + ': ' + savedText[i]);
+
+                    if (i >= response.startOffset && i < response.endOffset) {
+                        // the `i` refers to index of character array
+
+                        console.log(
+                            'response #' + responseIndex + ': in range'
+                        );
+
+                        // how many responses highlighted this character?
+                        counter ++;
+
+                
+
+                        // console.log(
+                        //     responseIndex + ': ' + response.responseId,
+                        //     response.startOffset,
+                        //     response.endOffset
+                        // );
+
+
+// wrap in span if counter === 1
+// if counter > 1, it's already wrapped so no need to wrap it.
+// counter ++ a style tag or variables in vue css????
+                        // outputString =
+                        //     outputString +
+                        //     "<span class='highlight-text'>" +
+                        //     div2.innerHTML[i] +
+                        //     '</span>';
+                    } else {
+                        // outputString = outputString + div2.innerHTML[i];
+                  
+                        console.log('response #' + responseIndex + ': else');
+                    }
+
+                    console.log('counter: ' + counter);
+                });
+                // for (var w = 0; w < responsesArray.length; w++) {
+
+                //     // if (i >= this.startOffset && i < this.endOffset) {}
+                //     console.table(responsesArray[w]);
+
+                //     console.log(w);
+                // }
+            }
+
+            this.combineResponsesHTML = 'test';
+        },
         getSelectedText() {
             const mySelection = window.getSelection();
 
@@ -85,7 +134,6 @@ export default {
 
                 // document fragment with html for selection
                 var fragment = range.cloneContents();
-                console.log(fragment);
 
                 // make new element, insert document fragment, then get innerHTML!
                 var div = document.createElement('div');
@@ -93,8 +141,6 @@ export default {
 
                 // your document fragment to a string (w/ html)! (yay!)
                 var html = div.innerHTML;
-                                console.log(html);
-
 
                 var div2 = document.createElement('div');
                 div2.innerHTML = this.savedText;
@@ -102,14 +148,13 @@ export default {
                 this.startOffset = div2.innerHTML.indexOf(html);
                 this.endOffset = this.startOffset + html.length;
 
-                console.log(html);
+                // console.log(html, this.startOffset, this.endOffset);
 
                 var outputString = '';
                 var insideAnElement = false;
 
                 for (var i = 0; i < div2.innerHTML.length; i++) {
                     if (i >= this.startOffset && i < this.endOffset) {
-                        
                         if (div2.innerHTML[i] == '<') {
                             insideAnElement = true;
                         }
@@ -155,33 +200,26 @@ export default {
         },
 
         submitSelection() {
-            let key = 'student' + (this.responses.length + 1);
+            this.responseId = 'student' + (this.responses.length + 1);
 
             let response = {
-                [key]: {
-                    startOffset: this.startOffset,
-                    endOffset: this.endOffset,
-                },
+                responseId: this.responseId,
+                startOffset: this.startOffset,
+                endOffset: this.endOffset,
             };
 
             this.responses.push(response);
+
+            // console.log(response);
+            // console.table(this.responses);
+
             // after response sent, resetSelection(); or load new view
             this.resetSelection();
 
+            this.displayResults();
+
             return;
         },
-
-        displayResults() {
-            // get full html 
-            // step thru character by character
-                // pass html tags thru
-                // for other characters, ++ for each response that has it in range (data attr? or in css property) and wrap it in a class for styling
-
-
-            console.table(this.responses);
-
-
-        }
     },
 };
 </script>
