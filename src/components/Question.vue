@@ -38,8 +38,6 @@ export default {
     computed: {},
     methods: {
         displayResults() {
-            // for other characters, ++ for each response that has it in range (data attr? or in css property) and wrap it in a class for styling
-
             // get full html
             let savedText = this.savedText;
             // console.log(savedText);
@@ -70,47 +68,15 @@ export default {
                 }
 
                 let counter = 0;
-                //    comboOutputString =
-                //                 comboOutputString +
-                //                 "<span>" +
-                //                 savedText[i] +
-                //                 '</span>';
 
                 // loop thru each response and grab offsets
                 responsesArray.forEach(function(response) {
                     if (i >= response.startOffset && i < response.endOffset) {
                         // the `i` refers to index of character array
 
-                        // console.log(
-                        //     'response #' + responseIndex + ': in range'
-                        // );
-
                         // how many responses highlighted this character?
                         counter++;
-
-                        // else {
-                        //     comboOutputString = comboOutputString + savedText[i];
-                        // }
-
-                        // console.log(
-                        //     responseIndex + ': ' + response.responseId,
-                        //     response.startOffset,
-                        //     response.endOffset
-                        // );
-
-                        // wrap in span if counter === 1?? or wrap all chars in span
-                        // if counter > 1, it's already wrapped so no need to wrap it.
-                        // counter ++ a style tag or variables in vue css????
-                    } 
-                    // else {
-                    //     // comboOutputString = comboOutputString + savedText[i];
-
-                    //     console.log('response #' + responseIndex + ': else');
-                    // }
-
-                    // else {
-
-                    // }
+                    }
 
                     // console.log('counter: ' + counter);
                 });
@@ -124,13 +90,11 @@ export default {
                         savedText[i] +
                         '</span>';
                 }
-                // for (var w = 0; w < responsesArray.length; w++) {
 
-                //     // if (i >= this.startOffset && i < this.endOffset) {}
-                //     console.table(responsesArray[w]);
-
-                //     console.log(w);
-                // }
+                // wrap in span if counter === 1?? or wrap all chars in span
+                // if counter > 1, it's already wrapped so no need to wrap it.
+                // counter ++ a style tag or variables in vue css????
+                // for other characters, ++ for each response that has it in range (data attr? or in css property) and wrap it in a class for styling
             }
             // console.log(comboOutputString);
             this.combineResponsesHTML = comboOutputString;
@@ -161,8 +125,6 @@ export default {
                 this.startOffset = div2.innerHTML.indexOf(html);
                 this.endOffset = this.startOffset + html.length;
 
-                // console.log(html, this.startOffset, this.endOffset);
-
                 var outputString = '';
                 var insideAnElement = false;
 
@@ -182,7 +144,7 @@ export default {
                         }
 
                         if (insideAnElement) {
-                            continue; // what is this keyword?
+                            continue;
                         }
                         outputString =
                             outputString +
@@ -223,12 +185,8 @@ export default {
 
             this.responses.push(response);
 
-            // console.log(response);
-            // console.table(this.responses);
-
             // after response sent, resetSelection(); or load new view (maybe a 'your response is submitted message)
             this.resetSelection();
-
 
             this.displayResults();
 
