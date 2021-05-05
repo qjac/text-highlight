@@ -28,7 +28,7 @@ export default {
             startOffset: 0,
             endOffset: 0,
             responses: [
-                { responseId: 'student1', startOffset: 0, endOffset: 8 },
+                { responseId: 'student1', startOffset: 2, endOffset: 8 },
                 { responseId: 'student2', startOffset: 12, endOffset: 23 },
                 { responseId: 'student3', startOffset: 2, endOffset: 15 },
             ],
@@ -44,7 +44,7 @@ export default {
             let savedText = this.savedText;
             // console.log(savedText);
 
-            let outputString = '';
+            let comboOutputString = '';
             let insideAnElement = false;
             let responsesArray = this.responses;
             // step thru character by character
@@ -57,7 +57,7 @@ export default {
                 }
 
                 if (insideAnElement) {
-                    outputString = outputString + savedText[i];
+                    comboOutputString = comboOutputString + savedText[i];
                 }
 
                 if (savedText[i] == '>') {
@@ -70,23 +70,27 @@ export default {
                 }
 
                 let counter = 0;
+                //    comboOutputString =
+                //                 comboOutputString +
+                //                 "<span>" +
+                //                 savedText[i] +
+                //                 '</span>';
 
                 // loop thru each response and grab offsets
-                responsesArray.forEach(function(response, responseIndex) {
-                    // console.log(savedText[i]);
-                    console.table(i + ': ' + savedText[i]);
-
+                responsesArray.forEach(function(response) {
                     if (i >= response.startOffset && i < response.endOffset) {
                         // the `i` refers to index of character array
 
-                        console.log(
-                            'response #' + responseIndex + ': in range'
-                        );
+                        // console.log(
+                        //     'response #' + responseIndex + ': in range'
+                        // );
 
                         // how many responses highlighted this character?
-                        counter ++;
+                        counter++;
 
-                
+                        // else {
+                        //     comboOutputString = comboOutputString + savedText[i];
+                        // }
 
                         // console.log(
                         //     responseIndex + ': ' + response.responseId,
@@ -94,23 +98,32 @@ export default {
                         //     response.endOffset
                         // );
 
+                        // wrap in span if counter === 1?? or wrap all chars in span
+                        // if counter > 1, it's already wrapped so no need to wrap it.
+                        // counter ++ a style tag or variables in vue css????
+                    } 
+                    // else {
+                    //     // comboOutputString = comboOutputString + savedText[i];
 
-// wrap in span if counter === 1
-// if counter > 1, it's already wrapped so no need to wrap it.
-// counter ++ a style tag or variables in vue css????
-                        // outputString =
-                        //     outputString +
-                        //     "<span class='highlight-text'>" +
-                        //     div2.innerHTML[i] +
-                        //     '</span>';
-                    } else {
-                        // outputString = outputString + div2.innerHTML[i];
-                  
-                        console.log('response #' + responseIndex + ': else');
-                    }
+                    //     console.log('response #' + responseIndex + ': else');
+                    // }
 
-                    console.log('counter: ' + counter);
+                    // else {
+
+                    // }
+
+                    // console.log('counter: ' + counter);
                 });
+
+                if (counter === 0) {
+                    comboOutputString = comboOutputString + savedText[i];
+                } else {
+                    comboOutputString =
+                        comboOutputString +
+                        "<span class='highlight'>" +
+                        savedText[i] +
+                        '</span>';
+                }
                 // for (var w = 0; w < responsesArray.length; w++) {
 
                 //     // if (i >= this.startOffset && i < this.endOffset) {}
@@ -119,8 +132,8 @@ export default {
                 //     console.log(w);
                 // }
             }
-
-            this.combineResponsesHTML = 'test';
+            // console.log(comboOutputString);
+            this.combineResponsesHTML = comboOutputString;
         },
         getSelectedText() {
             const mySelection = window.getSelection();
@@ -213,8 +226,9 @@ export default {
             // console.log(response);
             // console.table(this.responses);
 
-            // after response sent, resetSelection(); or load new view
+            // after response sent, resetSelection(); or load new view (maybe a 'your response is submitted message)
             this.resetSelection();
+
 
             this.displayResults();
 
